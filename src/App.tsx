@@ -3,7 +3,7 @@ import { getData } from "./api"
 
 function App() {
 	useEffect(() => {
-		console.log(getData())
+		getData()
 	}, [])
 
 	return <div className="App">Where the air </div>
