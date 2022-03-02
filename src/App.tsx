@@ -1,11 +1,14 @@
 import React, { useEffect } from "react"
+
 import { getData } from "./api"
+
+import { LayoutPortal } from "./layout/LayoutPortal.layout"
 
 function App() {
 	useEffect(() => {
 		getData()
 	}, [])
 
-	return <div className="App">Where the air </div>
+	return <LayoutPortal>Hello</LayoutPortal>
 }
 export default App
