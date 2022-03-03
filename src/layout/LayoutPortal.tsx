@@ -1,5 +1,7 @@
 import React, { FC } from "react"
 
+import "./LayoutPortal.scss"
+
 export const LayoutPortal: FC = ({ children }) => {
-	return <div>{children}</div>
+	return <div className="layout">{children}</div>
 }
