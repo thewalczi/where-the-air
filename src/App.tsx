@@ -1,12 +1,12 @@
 import React from "react"
 
-import { Map } from "./components/map/Map"
+import { MapWrapper } from "./components/map/MapWrapper"
 import { LayoutPortal } from "./layout/LayoutPortal"
 
 function App() {
 	return (
 		<LayoutPortal>
-			<Map />
+			<MapWrapper />
 		</LayoutPortal>
 	)
 }
