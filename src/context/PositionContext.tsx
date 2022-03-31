@@ -5,11 +5,14 @@ import React, {
 	SetStateAction,
 	useState
 } from "react"
+import { Coordinates } from "../api"
 
 interface ContextProps {
-	coordinates: [number, number]
-	setCoordinates: Dispatch<SetStateAction<[number, number]>>
-	currentPosition(): void
+	usersPosition: Coordinates
+	setUsersPosition: Dispatch<SetStateAction<Coordinates>>
+	getUseresActualPosition(): void
+	currentPosition: Coordinates
+	setCurrentPosition: Dispatch<SetStateAction<Coordinates>>
 }
 
 export const PositionContext = createContext({} as ContextProps)
@@ -20,16 +23,19 @@ interface Props {
 	children: ReactNode
 }
 
-const defaultPosition: [number, number] = [52.229676, 21.012229]
+const defaultPosition: Coordinates = { lat: 52.229676, lng: 21.012229 }
 
 export const PositionProvider = ({ children }: Props) => {
-	const [coordinates, setCoordinates] =
-		useState<[number, number]>(defaultPosition)
+	const [usersPosition, setUsersPosition] =
+		useState<Coordinates>(defaultPosition)
+	const [currentPosition, setCurrentPosition] =
+		useState<Coordinates>(usersPosition)
 
-	const currentPosition = async () => {
+	const getUseresActualPosition = async () => {
 		const success = (pos: GeolocationPosition) => {
 			const crd = pos.coords
-			setCoordinates([crd.latitude, crd.longitude])
+			setUsersPosition({ lat: crd.latitude, lng: crd.longitude })
+			setCurrentPosition({ lat: crd.latitude, lng: crd.longitude })
 		}
 
 		const error = (err: GeolocationPositionError) => {
@@ -42,9 +48,11 @@ export const PositionProvider = ({ children }: Props) => {
 	return (
 		<Provider
 			value={{
-				coordinates,
-				setCoordinates,
-				currentPosition
+				usersPosition,
+				setUsersPosition,
+				getUseresActualPosition,
+				currentPosition,
+				setCurrentPosition
 			}}
 		>
 			{children}

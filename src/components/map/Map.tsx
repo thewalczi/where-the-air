@@ -1,14 +1,13 @@
-import React, { FC } from "react"
+import { FC, useContext, useEffect, useState } from "react"
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet"
-
-interface MapProps {
-	coordinates: [number, number]
-}
+import { getNearest, Installation } from "../../api"
+import { PositionContext } from "../../context/PositionContext"
 
 const Button = () => {
 	const map = useMap()
+	const { setCurrentPosition } = useContext(PositionContext)
 	const handleClick = () => {
-		alert(map.getCenter())
+		setCurrentPosition({ lat: map.getCenter().lat, lng: map.getCenter().lng })
 	}
 	return (
 		<button
@@ -20,12 +19,24 @@ const Button = () => {
 	)
 }
 
-export const Map: FC<MapProps> = ({ coordinates }: MapProps) => {
+export const Map: FC = () => {
+	const { usersPosition, currentPosition } = useContext(PositionContext)
+
+	const [installations, setInstallations] = useState<Installation[]>()
+
+	useEffect(() => {
+		;(async () => {
+			setInstallations(
+				await getNearest(currentPosition.lat, currentPosition.lng)
+			)
+		})()
+	}, [currentPosition])
+
 	return (
 		<>
 			<MapContainer
-				key={JSON.stringify(coordinates)}
-				center={coordinates}
+				key={JSON.stringify(usersPosition)}
+				center={usersPosition}
 				zoom={15}
 				style={{ height: "calc(100% - 68px)" }}
 			>
@@ -33,11 +44,19 @@ export const Map: FC<MapProps> = ({ coordinates }: MapProps) => {
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
 					url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 				/>
-				{/* <Marker position={coordinates}>
-					<Popup>
-						A pretty CSS3 popup. <br /> Easily customizable.
-					</Popup>
-				</Marker> */}
+				{installations?.map((installation: Installation) => (
+					<Marker
+						key={installation.id}
+						position={[
+							installation.location.latitude,
+							installation.location.longitude
+						]}
+					>
+						<Popup>
+							A pretty CSS3 popup. <br /> Easily customizable.
+						</Popup>
+					</Marker>
+				))}
 				<Button />
 			</MapContainer>
 		</>

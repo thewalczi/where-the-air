@@ -1,17 +1,17 @@
-import React, { FC, useContext, useEffect } from "react"
+import { FC, useContext, useEffect } from "react"
 import { PositionContext } from "../../context/PositionContext"
 import { Map } from "./Map"
 
 export const MapWrapper: FC = () => {
-	const { coordinates, currentPosition } = useContext(PositionContext)
+	const { getUseresActualPosition } = useContext(PositionContext)
 
 	useEffect(() => {
-		currentPosition()
+		getUseresActualPosition()
 	}, [])
 
 	return (
 		<>
-			<Map coordinates={coordinates} />
+			<Map />
 		</>
 	)
 }
