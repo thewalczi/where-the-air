@@ -4,7 +4,7 @@ import { PositionContext } from "../../context/PositionContext"
 import "./PositionForm.scss"
 
 export const PositionForm: FC = () => {
-	const { currentPosition, setCurrentPosition } = useContext(PositionContext)
+	const { currentPosition, setUsersPosition } = useContext(PositionContext)
 
 	const [latitude, setLatitude] = useState<number | null>(null)
 	const [longitude, setLongitude] = useState<number | null>(null)
@@ -12,7 +12,7 @@ export const PositionForm: FC = () => {
 	const handleSubmit = (event: FormEvent) => {
 		event.preventDefault()
 		if (latitude && longitude) {
-			setCurrentPosition({ lat: latitude, lng: longitude })
+			setUsersPosition({ lat: latitude, lng: longitude })
 		}
 	}
 

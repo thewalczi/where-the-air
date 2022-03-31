@@ -3,6 +3,7 @@ import React, {
 	Dispatch,
 	ReactNode,
 	SetStateAction,
+	useEffect,
 	useState
 } from "react"
 import { Coordinates } from "../api"
@@ -35,7 +36,6 @@ export const PositionProvider = ({ children }: Props) => {
 		const success = (pos: GeolocationPosition) => {
 			const crd = pos.coords
 			setUsersPosition({ lat: crd.latitude, lng: crd.longitude })
-			setCurrentPosition({ lat: crd.latitude, lng: crd.longitude })
 		}
 
 		const error = (err: GeolocationPositionError) => {
@@ -44,6 +44,10 @@ export const PositionProvider = ({ children }: Props) => {
 
 		navigator.geolocation.getCurrentPosition(success, error)
 	}
+
+	useEffect(() => {
+		setCurrentPosition(usersPosition)
+	}, [usersPosition])
 
 	return (
 		<Provider
