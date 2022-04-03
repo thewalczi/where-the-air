@@ -1,4 +1,4 @@
-import React, {
+import {
 	createContext,
 	Dispatch,
 	ReactNode,
@@ -6,7 +6,7 @@ import React, {
 	useEffect,
 	useState
 } from "react"
-import { Coordinates } from "../api"
+import { Coordinates, getNearest, Installation } from "../api"
 
 interface ContextProps {
 	usersPosition: Coordinates
@@ -14,6 +14,7 @@ interface ContextProps {
 	getUseresActualPosition(): void
 	currentPosition: Coordinates
 	setCurrentPosition: Dispatch<SetStateAction<Coordinates>>
+	installations: Installation[]
 }
 
 export const PositionContext = createContext({} as ContextProps)
@@ -26,11 +27,44 @@ interface Props {
 
 const defaultPosition: Coordinates = { lat: 52.229676, lng: 21.012229 }
 
+const apiOptions = {
+	installations: {
+		nearest: {
+			number: 5,
+			distance: 3
+		}
+	}
+}
+
 export const PositionProvider = ({ children }: Props) => {
 	const [usersPosition, setUsersPosition] =
 		useState<Coordinates>(defaultPosition)
 	const [currentPosition, setCurrentPosition] =
 		useState<Coordinates>(usersPosition)
+	const [installations, setInstallations] = useState<Installation[]>([])
+
+	useEffect(() => {
+		getUseresActualPosition()
+	}, [])
+
+	useEffect(() => {
+		setCurrentPosition(usersPosition)
+	}, [usersPosition])
+
+	useEffect(() => {
+		;(async () => {
+			if (currentPosition) {
+				setInstallations(
+					await getNearest(
+						currentPosition.lat,
+						currentPosition.lng,
+						apiOptions.installations.nearest.number,
+						apiOptions.installations.nearest.distance
+					)
+				)
+			}
+		})()
+	}, [currentPosition])
 
 	const getUseresActualPosition = async () => {
 		const success = (pos: GeolocationPosition) => {
@@ -45,10 +79,6 @@ export const PositionProvider = ({ children }: Props) => {
 		navigator.geolocation.getCurrentPosition(success, error)
 	}
 
-	useEffect(() => {
-		setCurrentPosition(usersPosition)
-	}, [usersPosition])
-
 	return (
 		<Provider
 			value={{
@@ -56,7 +86,8 @@ export const PositionProvider = ({ children }: Props) => {
 				setUsersPosition,
 				getUseresActualPosition,
 				currentPosition,
-				setCurrentPosition
+				setCurrentPosition,
+				installations
 			}}
 		>
 			{children}

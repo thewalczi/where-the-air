@@ -1,0 +1,18 @@
+.sidepanel {
+	flex: 0 0 auto;
+	width: 450px;
+	max-width: 75%;
+	background-color: #fff;
+	padding: 0 16px;
+
+	&__list {
+		list-style-type: none;
+		padding: 0;
+		margin: 0;
+
+		&-item {
+			padding: 16px 24px;
+			border-bottom: 1px solid #eee;
+		}
+	}
+}

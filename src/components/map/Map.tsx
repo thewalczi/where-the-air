@@ -1,7 +1,8 @@
-import { FC, useContext, useEffect, useState } from "react"
+import { FC, useContext } from "react"
 import { MapContainer, Marker, Popup, TileLayer, useMap } from "react-leaflet"
-import { getNearest, Installation } from "../../api"
+import { Installation } from "../../api"
 import { PositionContext } from "../../context/PositionContext"
+import "./Map.scss"
 
 const Button = () => {
 	const map = useMap()
@@ -20,25 +21,14 @@ const Button = () => {
 }
 
 export const Map: FC = () => {
-	const { usersPosition, currentPosition } = useContext(PositionContext)
-
-	const [installations, setInstallations] = useState<Installation[]>()
-
-	useEffect(() => {
-		;(async () => {
-			setInstallations(
-				await getNearest(currentPosition.lat, currentPosition.lng)
-			)
-		})()
-	}, [currentPosition])
+	const { usersPosition, installations } = useContext(PositionContext)
 
 	return (
-		<>
+		<div className="map">
 			<MapContainer
 				key={JSON.stringify(usersPosition)}
 				center={usersPosition}
 				zoom={15}
-				style={{ height: "calc(100% - 68px)" }}
 			>
 				<TileLayer
 					attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -59,6 +49,6 @@ export const Map: FC = () => {
 				))}
 				<Button />
 			</MapContainer>
-		</>
+		</div>
 	)
 }

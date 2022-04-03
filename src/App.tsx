@@ -1,6 +1,6 @@
 import React from "react"
 
-import { MapWrapper } from "./components/map/MapWrapper"
+import { ContentWrapper } from "./components/content-wrapper/ContentWrapper"
 import { TopBar } from "./components/topbar/TopBar"
 import { PositionProvider } from "./context/PositionContext"
 import { LayoutPortal } from "./layout/LayoutPortal"
@@ -10,7 +10,7 @@ function App() {
 		<PositionProvider>
 			<LayoutPortal>
 				<TopBar />
-				<MapWrapper />
+				<ContentWrapper />
 			</LayoutPortal>
 		</PositionProvider>
 	)

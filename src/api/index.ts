@@ -17,7 +17,14 @@ export interface Coordinates {
 }
 
 export interface Installation {
-	address: object
+	address: {
+		city: string
+		country: string
+		displayAddress1: string
+		displayAddress2: string
+		number: string | null
+		street: string
+	}
 	airly: boolean
 	elevation: number
 	id: number
@@ -28,10 +35,12 @@ export interface Installation {
 
 export const getNearest = async (
 	lat: number,
-	lng: number
+	lng: number,
+	max: number,
+	distance: number
 ): Promise<Installation[]> => {
 	const response = await instance.get(
-		`installations/nearest?lat=${lat}&lng=${lng}&maxDistanceKM=5&maxResults=10`
+		`installations/nearest?lat=${lat}&lng=${lng}&maxDistanceKM=${distance}&maxResults=${max}`
 	)
 	console.log(response.data)
 	return response.data
